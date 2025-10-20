@@ -3,6 +3,8 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 import { Card, Title, Paragraph, Button } from 'react-native-paper';
 import { LineChart } from 'react-native-chart-kit';
 import { Dimensions } from 'react-native';
+import { startMining } from '../modules/mining-module/src';
+import PoolService from '../services/PoolService';
 import MiningService from '../services/MiningService';
 
 const screenWidth = Dimensions.get('window').width;
@@ -14,24 +16,36 @@ const DashboardScreen = () => {
     temperature: 30,
   });
   const [chartData, setChartData] = useState([0]);
+  const [nativeResponse, setNativeResponse] = useState('');
+  const [poolStatus, setPoolStatus] = useState('Disconnected');
 
   useEffect(() => {
-    const unsubscribe = MiningService.subscribe(data => {
+    const unsubscribePool = PoolService.subscribe(data => {
+      setPoolStatus(data.status);
+    });
+    PoolService.connect();
+
+    const unsubscribeMining = MiningService.subscribe(data => {
       setMiningData(data);
       setChartData(prevData => [...prevData.slice(-6), data.hashrate]);
     });
 
     return () => {
-      unsubscribe();
+      unsubscribePool();
+      PoolService.disconnect();
+      unsubscribeMining();
     };
   }, []);
 
   const handleStartMining = () => {
     MiningService.start();
+    const result = startMining("dummy_job");
+    setNativeResponse(result);
   };
 
   const handleStopMining = () => {
     MiningService.stop();
+    setNativeResponse('');
   };
 
   return (
@@ -58,6 +72,13 @@ const DashboardScreen = () => {
 
       <Card style={styles.card}>
         <Card.Content>
+          <Title style={styles.cardTitle}>Native Module Response</Title>
+          <Paragraph style={styles.paragraph}>{nativeResponse}</Paragraph>
+        </Card.Content>
+      </Card>
+
+      <Card style={styles.card}>
+        <Card.Content>
           <Title style={styles.cardTitle}>Current Algorithm</Title>
           <Paragraph style={styles.paragraph}>RandomX (Monero)</Paragraph>
         </Card.Content>
@@ -66,7 +87,7 @@ const DashboardScreen = () => {
       <Card style={styles.card}>
         <Card.Content>
           <Title style={styles.cardTitle}>Pool Status</Title>
-          <Paragraph style={styles.paragraph}>Connected to Monero Ocean</Paragraph>
+          <Paragraph style={styles.paragraph}>{poolStatus}</Paragraph>
         </Card.Content>
       </Card>
 
