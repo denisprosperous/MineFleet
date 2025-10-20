@@ -1,0 +1,172 @@
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, ScrollView } from 'react-native';
+import { Card, Title, Paragraph, Button } from 'react-native-paper';
+import { LineChart } from 'react-native-chart-kit';
+import { Dimensions } from 'react-native';
+import MiningService from '../services/MiningService';
+
+const screenWidth = Dimensions.get('window').width;
+
+const DashboardScreen = () => {
+  const [miningData, setMiningData] = useState({
+    hashrate: 0,
+    earnings: 0,
+    temperature: 30,
+  });
+  const [chartData, setChartData] = useState([0]);
+
+  useEffect(() => {
+    const unsubscribe = MiningService.subscribe(data => {
+      setMiningData(data);
+      setChartData(prevData => [...prevData.slice(-6), data.hashrate]);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  const handleStartMining = () => {
+    MiningService.start();
+  };
+
+  const handleStopMining = () => {
+    MiningService.stop();
+  };
+
+  return (
+    <ScrollView style={styles.container}>
+      <Card style={styles.card}>
+        <Card.Content>
+          <Title style={styles.cardTitle}>Quick Stats</Title>
+          <View style={styles.statsContainer}>
+            <View style={styles.stat}>
+              <Paragraph style={styles.statLabel}>Hashrate</Paragraph>
+              <Paragraph style={styles.statValue}>{miningData.hashrate.toFixed(2)} MH/s</Paragraph>
+            </View>
+            <View style={styles.stat}>
+              <Paragraph style={styles.statLabel}>Earnings</Paragraph>
+              <Paragraph style={styles.statValue}>${miningData.earnings.toFixed(4)}</Paragraph>
+            </View>
+            <View style={styles.stat}>
+              <Paragraph style={styles.statLabel}>Temp</Paragraph>
+              <Paragraph style={styles.statValue}>{miningData.temperature.toFixed(1)}°C</Paragraph>
+            </View>
+          </View>
+        </Card.Content>
+      </Card>
+
+      <Card style={styles.card}>
+        <Card.Content>
+          <Title style={styles.cardTitle}>Current Algorithm</Title>
+          <Paragraph style={styles.paragraph}>RandomX (Monero)</Paragraph>
+        </Card.Content>
+      </Card>
+
+      <Card style={styles.card}>
+        <Card.Content>
+          <Title style={styles.cardTitle}>Pool Status</Title>
+          <Paragraph style={styles.paragraph}>Connected to Monero Ocean</Paragraph>
+        </Card.Content>
+      </Card>
+
+      <Card style={styles.card}>
+        <Card.Content>
+          <Title style={styles.cardTitle}>Hashrate History</Title>
+          <LineChart
+            data={{
+              labels: ['-10s', '-8s', '-6s', '-4s', '-2s', 'Now'],
+              datasets: [
+                {
+                  data: chartData,
+                },
+              ],
+            }}
+            width={screenWidth - 64}
+            height={220}
+            chartConfig={chartConfig}
+            bezier
+            style={styles.chart}
+          />
+        </Card.Content>
+      </Card>
+
+      <View style={styles.buttonContainer}>
+        <Button mode="contained" onPress={handleStartMining} style={styles.button}>
+          Start Mining
+        </Button>
+        <Button mode="outlined" onPress={handleStopMining} style={styles.button}>
+          Stop Mining
+        </Button>
+      </View>
+    </ScrollView>
+  );
+};
+
+const chartConfig = {
+  backgroundColor: '#1E3A8A',
+  backgroundGradientFrom: '#1E3A8A',
+  backgroundGradientTo: '#10B981',
+  decimalPlaces: 2,
+  color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+  labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+  style: {
+    borderRadius: 16,
+  },
+  propsForDots: {
+    r: '6',
+    strokeWidth: '2',
+    stroke: '#10B981',
+  },
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#111827',
+    padding: 16,
+  },
+  card: {
+    marginBottom: 16,
+    backgroundColor: '#1F2937',
+  },
+  cardTitle: {
+    color: '#F3F4F6',
+    marginBottom: 8,
+  },
+  paragraph: {
+    color: '#D1D5DB',
+  },
+  statsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  stat: {
+    alignItems: 'center',
+  },
+  statLabel: {
+    color: '#D1D5DB',
+    fontSize: 14,
+  },
+  statValue: {
+    color: '#F3F4F6',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  chart: {
+    marginVertical: 8,
+    borderRadius: 16,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 16,
+    marginBottom: 32,
+  },
+  button: {
+    flex: 1,
+    marginHorizontal: 8,
+  },
+});
+
+export default DashboardScreen;
