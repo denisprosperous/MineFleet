@@ -1,0 +1,7 @@
+
+> gpu-mining-app@1.0.0 android
+> expo run:android
+
+- Clearing android
+✔ Cleared android code
+- Creating native directory (./android)

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
-import { Card, Title, Paragraph, Button } from 'react-native-paper';
+import { Card, Title, Paragraph, Button, SegmentedButtons } from 'react-native-paper';
 import { LineChart } from 'react-native-chart-kit';
 import { Dimensions } from 'react-native';
-import { startMining, addHashListener } from '../modules/mining-module/src';
+import MiningService from '../services/MiningService';
 import PoolService from '../services/PoolService';
 import WalletService from '../services/WalletService';
 
@@ -11,10 +11,11 @@ const screenWidth = Dimensions.get('window').width;
 
 const DashboardScreen = () => {
   const [hashrate, setHashrate] = useState(0);
-  const [acceptedHashes, setAcceptedHashes] = useState(0);
+  const [earnings, setEarnings] = useState(0);
   const [chartData, setChartData] = useState([0]);
   const [poolStatus, setPoolStatus] = useState('Disconnected');
   const [wallet, setWallet] = useState(null);
+  const [miningMode, setMiningMode] = useState('cpu');
 
   useEffect(() => {
     const loadWallet = async () => {
@@ -27,45 +28,38 @@ const DashboardScreen = () => {
   }, []);
 
   useEffect(() => {
-    if (!wallet) return;
-
-    const hashSubscription = addHashListener(hash => {
-      PoolService.submit(hash);
-      setAcceptedHashes(prev => prev + 1);
+    const miningSubscription = MiningService.subscribe(({ hashrate, earnings }) => {
+      setHashrate(hashrate);
+      setEarnings(earnings);
+      setChartData(prevData => [...prevData.slice(-6), hashrate]);
     });
 
     const statusSubscription = PoolService.subscribe('status', data => {
       setPoolStatus(data.status);
     });
 
-    const jobSubscription = PoolService.subscribe('job', data => {
-        startMining(data.job.blob);
-    });
-
-    PoolService.connect(wallet.address);
-
-    const interval = setInterval(() => {
-        setHashrate(acceptedHashes * 2);
-        setChartData(prevData => [...prevData.slice(-6), acceptedHashes * 2]);
-        setAcceptedHashes(0);
-    }, 2000);
-
     return () => {
-      hashSubscription.remove();
+      miningSubscription();
       statusSubscription.remove();
-      jobSubscription.remove();
-      clearInterval(interval);
-      PoolService.disconnect();
     };
-  }, [wallet, acceptedHashes]);
+  }, []);
 
   const handleStartMining = () => {
     if (wallet) {
-        PoolService.connect(wallet.address);
+      PoolService.connect(wallet.address);
+      const job = PoolService.getCurrentJob();
+      if (job) {
+        if (miningMode === 'cpu') {
+          MiningService.start(job.blob);
+        } else {
+          MiningService.startGpuMining(job.blob);
+        }
+      }
     }
   };
 
   const handleStopMining = () => {
+    MiningService.stop();
     PoolService.disconnect();
   };
 
@@ -80,12 +74,28 @@ const DashboardScreen = () => {
               <Paragraph style={styles.statValue}>{hashrate} H/s</Paragraph>
             </View>
             <View style={styles.stat}>
-              <Paragraph style={styles.statLabel}>Accepted</Paragraph>
-              <Paragraph style={styles.statValue}>{acceptedHashes}</Paragraph>
+              <Paragraph style={styles.statLabel}>Earnings</Paragraph>
+              <Paragraph style={styles.statValue}>{earnings.toFixed(6)}</Paragraph>
             </View>
           </View>
         </Card.Content>
       </Card>
+
+      <SegmentedButtons
+        value={miningMode}
+        onValueChange={setMiningMode}
+        buttons={[
+          {
+            value: 'cpu',
+            label: 'CPU',
+          },
+          {
+            value: 'gpu',
+            label: 'GPU (Simulated)',
+          },
+        ]}
+        style={styles.segmentedButtons}
+      />
 
       <Card style={styles.card}>
         <Card.Content>
@@ -190,6 +200,9 @@ const chartConfig = {
     button: {
       flex: 1,
       marginHorizontal: 8,
+    },
+    segmentedButtons: {
+      marginBottom: 16,
     },
   });
 

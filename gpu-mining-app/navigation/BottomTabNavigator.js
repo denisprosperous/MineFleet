@@ -8,6 +8,7 @@ import MiningScreen from '../screens/MiningScreen';
 import WalletScreen from '../screens/WalletScreen';
 import AnalyticsScreen from '../screens/AnalyticsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import ReferralsScreen from '../screens/ReferralsScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -28,6 +29,8 @@ const BottomTabNavigator = () => {
             iconName = focused ? 'ios-analytics' : 'ios-analytics-outline';
           } else if (route.name === 'Settings') {
             iconName = focused ? 'ios-settings' : 'ios-settings-outline';
+          } else if (route.name === 'Referrals') {
+            iconName = focused ? 'ios-people' : 'ios-people-outline';
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -42,6 +45,7 @@ const BottomTabNavigator = () => {
       <Tab.Screen name="Dashboard" component={DashboardScreen} />
       <Tab.Screen name="Mining" component={MiningScreen} />
       <Tab.Screen name="Wallet" component={WalletScreen} />
+      <Tab.Screen name="Referrals" component={ReferralsScreen} />
       <Tab.Screen name="Analytics" component={AnalyticsScreen} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
     </Tab.Navigator>

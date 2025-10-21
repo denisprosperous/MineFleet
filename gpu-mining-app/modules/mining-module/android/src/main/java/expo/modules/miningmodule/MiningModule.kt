@@ -16,10 +16,20 @@ class MiningModule : Module() {
     Function("startGpuMining") { job: String ->
       nativeStartGpuMining(this, job)
     }
+
+    Function("stopGpuMining") {
+      nativeStopGpuMining()
+    }
+
+    Function("getGpuMinerStats") {
+      return@Function nativeGetGpuMinerStats()
+    }
   }
 
   private external fun nativeStartMining(module: MiningModule, job: String)
   private external fun nativeStartGpuMining(module: MiningModule, job: String)
+  private external fun nativeStopGpuMining()
+  private external fun nativeGetGpuMinerStats(): String
 
   companion object {
     init {
