@@ -3,3 +3,6 @@
 > expo start --web
 
 Starting project at /app/gpu-mining-app
+› Port 8081 is running this app in another window
+  /app/gpu-mining-app (pid 6656)
+› Skipping dev server

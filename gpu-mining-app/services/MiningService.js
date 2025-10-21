@@ -1,5 +1,5 @@
-// This is a simulated mining service. In a real application, this would
-// interface with the native mining layer.
+import DeviceHealthService from './DeviceHealthService';
+import DatabaseService from './DatabaseService';
 
 class MiningService {
   constructor() {
@@ -7,7 +7,20 @@ class MiningService {
     this.miningInterval = null;
     this.hashrate = 0;
     this.earnings = 0;
-    this.temperature = 30;
+    this.isPaused = false;
+    this.startTime = null;
+
+    DeviceHealthService.subscribe(({ batteryLevel, temperature }) => {
+      if (batteryLevel < 0.2 || temperature > 50) {
+        if (!this.isPaused) {
+          this.pause();
+        }
+      } else {
+        if (this.isPaused) {
+          this.resume();
+        }
+      }
+    });
   }
 
   subscribe(callback) {
@@ -22,7 +35,6 @@ class MiningService {
       callback({
         hashrate: this.hashrate,
         earnings: this.earnings,
-        temperature: this.temperature,
       });
     });
   }
@@ -32,14 +44,16 @@ class MiningService {
       return;
     }
 
+    this.startTime = new Date().toISOString();
     this.miningInterval = setInterval(() => {
-      // Simulate hashrate fluctuations
-      this.hashrate = Math.random() * (1.5 - 1.0) + 1.0; // MH/s
-      // Simulate earnings based on hashrate
-      this.earnings += this.hashrate * 0.00001;
-      // Simulate temperature changes
-      this.temperature = Math.random() * (45 - 40) + 40; // degrees Celsius
-
+      if (!this.isPaused) {
+        // Simulate hashrate fluctuations
+        this.hashrate = Math.random() * (1.5 - 1.0) + 1.0; // MH/s
+        // Simulate earnings based on hashrate
+        this.earnings += this.hashrate * 0.00001;
+      } else {
+        this.hashrate = 0;
+      }
       this.notifySubscribers();
     }, 2000);
   }
@@ -48,10 +62,28 @@ class MiningService {
     if (this.miningInterval) {
       clearInterval(this.miningInterval);
       this.miningInterval = null;
+
+      const session = {
+        startTime: this.startTime,
+        endTime: new Date().toISOString(),
+        hashrate: this.hashrate,
+        earnings: this.earnings,
+      };
+      DatabaseService.logSession(session);
+
       this.hashrate = 0;
-      this.temperature = 30;
+      this.earnings = 0;
+      this.startTime = null;
       this.notifySubscribers();
     }
+  }
+
+  pause() {
+    this.isPaused = true;
+  }
+
+  resume() {
+    this.isPaused = false;
   }
 }
 

@@ -1,0 +1,21 @@
+from playwright.sync_api import sync_playwright
+
+def run(playwright):
+    browser = playwright.chromium.launch(headless=True)
+    context = browser.new_context()
+    page = context.new_page()
+    page.goto("http://localhost:8081")
+
+    # Verify Analytics Screen
+    page.click('text="Analytics"')
+    page.wait_for_selector('text="Earnings History"')
+
+    # Verify Dashboard Screen
+    page.click('text="Dashboard"')
+    page.wait_for_selector('text="Device Health"')
+
+    page.screenshot(path="jules-scratch/verification/verification.png")
+    browser.close()
+
+with sync_playwright() as playwright:
+    run(playwright)

@@ -7,12 +7,19 @@ class MiningModule : Module() {
   override fun definition() = ModuleDefinition {
     Name("MiningModule")
 
+    Events("onNewHash")
+
     Function("startMining") { job: String ->
-      return@Function nativeStartMining(job)
+      nativeStartMining(this, job)
+    }
+
+    Function("startGpuMining") { job: String ->
+      nativeStartGpuMining(this, job)
     }
   }
 
-  private external fun nativeStartMining(job: String): String
+  private external fun nativeStartMining(module: MiningModule, job: String)
+  private external fun nativeStartGpuMining(module: MiningModule, job: String)
 
   companion object {
     init {
