@@ -1,16 +1,28 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 
-// Placeholder screens
+// Screens
 import DashboardScreen from '../screens/DashboardScreen';
 import MiningScreen from '../screens/MiningScreen';
 import WalletScreen from '../screens/WalletScreen';
 import AnalyticsScreen from '../screens/AnalyticsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import ReferralsScreen from '../screens/ReferralsScreen';
+import ApiKeysScreen from '../screens/ApiKeysScreen';
 
 const Tab = createBottomTabNavigator();
+const SettingsStack = createNativeStackNavigator();
+
+function SettingsNavigator() {
+  return (
+    <SettingsStack.Navigator>
+      <SettingsStack.Screen name="Settings" component={SettingsScreen} />
+      <SettingsStack.Screen name="ApiKeys" component={ApiKeysScreen} />
+    </SettingsStack.Navigator>
+  );
+}
 
 const BottomTabNavigator = () => {
   return (
@@ -47,7 +59,7 @@ const BottomTabNavigator = () => {
       <Tab.Screen name="Wallet" component={WalletScreen} />
       <Tab.Screen name="Referrals" component={ReferralsScreen} />
       <Tab.Screen name="Analytics" component={AnalyticsScreen} />
-      <Tab.Screen name="Settings" component={SettingsScreen} />
+      <Tab.Screen name="Settings" component={SettingsNavigator} />
     </Tab.Navigator>
   );
 };

@@ -1,4 +1,6 @@
 import * as Battery from 'expo-battery';
+import NetInfo from '@react-native-community/netinfo';
+import { AppState } from 'react-native';
 
 class DeviceHealthService {
   constructor() {
@@ -6,6 +8,10 @@ class DeviceHealthService {
     this.batteryLevel = 1;
     this.isCharging = false;
     this.temperature = 30;
+    this.isConnected = true;
+    this.connectionType = null;
+    this.isScreenOn = true;
+    this.mineOnMobileData = false;
     this.monitoringInterval = null;
 
     this.init();
@@ -25,6 +31,24 @@ class DeviceHealthService {
       this.isCharging = batteryState === Battery.BatteryState.CHARGING;
       this.notifySubscribers();
     });
+
+    NetInfo.addEventListener(state => {
+      this.isConnected = state.isConnected;
+      this.connectionType = state.type;
+      this.notifySubscribers();
+    });
+
+    AppState.addEventListener('change', this.handleAppStateChange);
+  }
+
+  handleAppStateChange = (nextAppState) => {
+    this.isScreenOn = nextAppState === 'active';
+    this.notifySubscribers();
+  }
+
+  setMineOnMobileData(value) {
+    this.mineOnMobileData = value;
+    this.notifySubscribers();
   }
 
   subscribe(callback) {
@@ -35,11 +59,21 @@ class DeviceHealthService {
   }
 
   notifySubscribers() {
+    const isSafeToMine =
+      this.temperature < 43 &&
+      this.batteryLevel > 0.3 &&
+      (this.connectionType === 'wifi' || this.mineOnMobileData) &&
+      !this.isScreenOn;
+
     this.subscribers.forEach(callback => {
       callback({
         batteryLevel: this.batteryLevel,
         isCharging: this.isCharging,
         temperature: this.temperature,
+        isConnected: this.isConnected,
+        connectionType: this.connectionType,
+        isScreenOn: this.isScreenOn,
+        isSafeToMine,
       });
     });
   }

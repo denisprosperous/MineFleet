@@ -16,8 +16,8 @@ class MiningService {
     this.startTime = null;
     this.miningMode = 'cpu'; // 'cpu' or 'gpu'
 
-    DeviceHealthService.subscribe(({ batteryLevel, temperature }) => {
-      if (batteryLevel < 0.2 || temperature > 50) {
+    DeviceHealthService.subscribe(({ isSafeToMine }) => {
+      if (!isSafeToMine) {
         if (!this.isPaused) {
           this.pause();
         }

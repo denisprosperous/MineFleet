@@ -1,0 +1,7 @@
+{
+  "name": "smart-miner-monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ]
+}
