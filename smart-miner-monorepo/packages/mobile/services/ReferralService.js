@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import PremiumService from './PremiumService';
 
 const DEV_ADDRESSES = {
   USDT: 'TXdzYBoq2xpvpQWkve3WK4ENrPC6V2KuHY',
@@ -53,7 +54,8 @@ class ReferralService {
     return tree ? JSON.parse(tree) : {};
   }
 
-  calculateEarnings(miningEarnings) {
+  async calculateEarnings(miningEarnings) {
+    const isPremium = await PremiumService.isPremium();
     const devCommission = miningEarnings * 0.03;
     let userEarnings = miningEarnings - devCommission;
     const referralEarnings = {
@@ -65,7 +67,11 @@ class ReferralService {
     // This is a simplified simulation. A real implementation would
     // require a backend to track the entire referral network.
     if (this.referrer) {
-      referralEarnings.tier1 = miningEarnings * 0.05;
+      let tier1Rate = 0.05;
+      if (isPremium) {
+        tier1Rate += 0.01;
+      }
+      referralEarnings.tier1 = miningEarnings * tier1Rate;
       userEarnings -= referralEarnings.tier1;
     }
 

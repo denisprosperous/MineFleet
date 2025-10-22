@@ -11,6 +11,7 @@ import AnalyticsScreen from '../screens/AnalyticsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import ReferralsScreen from '../screens/ReferralsScreen';
 import ApiKeysScreen from '../screens/ApiKeysScreen';
+import PremiumScreen from '../screens/PremiumScreen';
 
 const Tab = createBottomTabNavigator();
 const SettingsStack = createNativeStackNavigator();
@@ -20,6 +21,7 @@ function SettingsNavigator() {
     <SettingsStack.Navigator>
       <SettingsStack.Screen name="Settings" component={SettingsScreen} />
       <SettingsStack.Screen name="ApiKeys" component={ApiKeysScreen} />
+      <SettingsStack.Screen name="Premium" component={PremiumScreen} />
     </SettingsStack.Navigator>
   );
 }

@@ -28,9 +28,9 @@ class MiningService {
       }
     });
 
-    miningModuleEmitter.addListener('onNewHash', (hash) => {
+    miningModuleEmitter.addListener('onNewHash', async (hash) => {
       const miningEarnings = 0.001; // Simulate earnings for each hash
-      const { userEarnings } = ReferralService.calculateEarnings(miningEarnings);
+      const { userEarnings } = await ReferralService.calculateEarnings(miningEarnings);
 
       if (this.miningMode === 'gpu') {
         this.earnings += userEarnings;
