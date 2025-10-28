@@ -1,0 +1,29 @@
+require 'json'
+
+def config = new JsonSlurper().parseText(file("../../expo-module.config.json").text)
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 33
+    defaultConfig {
+        minSdkVersion 23
+        targetSdkVersion 33
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+        }
+    }
+}
+
+dependencies {
+    implementation 'expo.modules:expo-modules-core:1.11.9'
+}

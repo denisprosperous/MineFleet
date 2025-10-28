@@ -1,0 +1,13 @@
+{
+  "name": "mining-module",
+  "platforms": [
+    "android"
+  ],
+  "android": {
+    "namespace": "expo.modules.miningmodule",
+    "requireLocalProp": false,
+    "modules": [
+      "expo.modules.miningmodule.MiningModule"
+    ]
+  }
+}

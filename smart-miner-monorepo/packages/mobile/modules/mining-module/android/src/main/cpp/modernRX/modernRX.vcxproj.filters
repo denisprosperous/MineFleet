@@ -1,0 +1,192 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="blake2b">
+      <UniqueIdentifier>{006bbf21-f80f-49a0-aa59-0c466da34570}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="argon2d">
+      <UniqueIdentifier>{c58a0c6d-66b7-4660-931d-2eec8d543b69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="aes">
+      <UniqueIdentifier>{ddd89c2e-9f43-4808-9897-c2fa99fc6e3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="superscalar">
+      <UniqueIdentifier>{c233f912-a4e2-45db-8344-a213ab253c56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{54110183-fa4a-4b8a-b497-cd09b3c15398}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dataset">
+      <UniqueIdentifier>{005ebbd1-232f-4c5b-bc85-0828b7ad420d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="modernRX">
+      <UniqueIdentifier>{6b8b4345-5925-445f-9f9d-5de7ad4c9378}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils\assembler">
+      <UniqueIdentifier>{04bccb2b-a4f0-41c5-8044-4095eb2ecadf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils\intrinsics">
+      <UniqueIdentifier>{5f92fa01-6edf-438c-8374-dd7bc05a3d26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vm">
+      <UniqueIdentifier>{b1d97ff8-31a4-48f2-ab6b-93380fd71307}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils\system">
+      <UniqueIdentifier>{4d33a94d-a192-4aac-876e-e6635688119e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="blake2b.hpp">
+      <Filter>blake2b</Filter>
+    </ClInclude>
+    <ClInclude Include="blake2brandom.hpp">
+      <Filter>blake2b</Filter>
+    </ClInclude>
+    <ClInclude Include="argon2d.hpp">
+      <Filter>argon2d</Filter>
+    </ClInclude>
+    <ClInclude Include="superscalar.hpp">
+      <Filter>superscalar</Filter>
+    </ClInclude>
+    <ClInclude Include="cast.hpp">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="reciprocal.hpp">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="virtualmachine.hpp">
+      <Filter>vm</Filter>
+    </ClInclude>
+    <ClInclude Include="dataset.hpp">
+      <Filter>dataset</Filter>
+    </ClInclude>
+    <ClInclude Include="randomxparams.hpp">
+      <Filter>modernRX</Filter>
+    </ClInclude>
+    <ClInclude Include="aes1rrandom.hpp">
+      <Filter>aes</Filter>
+    </ClInclude>
+    <ClInclude Include="aes4rrandom.hpp">
+      <Filter>aes</Filter>
+    </ClInclude>
+    <ClInclude Include="aes1rhash.hpp">
+      <Filter>aes</Filter>
+    </ClInclude>
+    <ClInclude Include="instructionset.hpp">
+      <Filter>superscalar</Filter>
+    </ClInclude>
+    <ClInclude Include="bytecode.hpp">
+      <Filter>vm</Filter>
+    </ClInclude>
+    <ClInclude Include="hasher.hpp">
+      <Filter>modernRX</Filter>
+    </ClInclude>
+    <ClInclude Include="aliases.hpp">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="assertume.hpp">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="argon2davx512.hpp">
+      <Filter>argon2d</Filter>
+    </ClInclude>
+    <ClInclude Include="heaparray.hpp">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="datasetcompiler.hpp">
+      <Filter>dataset</Filter>
+    </ClInclude>
+    <ClInclude Include="alignedallocator.hpp">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="cpuinfo.hpp">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="exception.hpp">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="assembler.hpp">
+      <Filter>utils\assembler</Filter>
+    </ClInclude>
+    <ClInclude Include="assemblerdef.hpp">
+      <Filter>utils\assembler</Filter>
+    </ClInclude>
+    <ClInclude Include="intrinsics.hpp">
+      <Filter>utils\intrinsics</Filter>
+    </ClInclude>
+    <ClInclude Include="sse.hpp">
+      <Filter>utils\intrinsics</Filter>
+    </ClInclude>
+    <ClInclude Include="avx2.hpp">
+      <Filter>utils\intrinsics</Filter>
+    </ClInclude>
+    <ClInclude Include="aes.hpp">
+      <Filter>utils\intrinsics</Filter>
+    </ClInclude>
+    <ClInclude Include="bytecodecompiler.hpp">
+      <Filter>vm</Filter>
+    </ClInclude>
+    <ClInclude Include="blocktemplate.hpp">
+      <Filter>modernRX</Filter>
+    </ClInclude>
+    <ClInclude Include="hash.hpp">
+      <Filter>modernRX</Filter>
+    </ClInclude>
+    <ClInclude Include="virtualmem.hpp">
+      <Filter>utils\system</Filter>
+    </ClInclude>
+    <ClInclude Include="thread.hpp">
+      <Filter>utils\system</Filter>
+    </ClInclude>
+    <ClInclude Include="trace.hpp">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="avx512.hpp">
+      <Filter>utils\intrinsics</Filter>
+    </ClInclude>
+    <ClInclude Include="blake2bavx512.hpp">
+      <Filter>blake2b</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="blake2b.cpp">
+      <Filter>blake2b</Filter>
+    </ClCompile>
+    <ClCompile Include="blake2brandom.cpp">
+      <Filter>blake2b</Filter>
+    </ClCompile>
+    <ClCompile Include="argon2d.cpp">
+      <Filter>argon2d</Filter>
+    </ClCompile>
+    <ClCompile Include="aes1rrandom.cpp">
+      <Filter>aes</Filter>
+    </ClCompile>
+    <ClCompile Include="aes4rrandom.cpp">
+      <Filter>aes</Filter>
+    </ClCompile>
+    <ClCompile Include="aes1rhash.cpp">
+      <Filter>aes</Filter>
+    </ClCompile>
+    <ClCompile Include="superscalar.cpp">
+      <Filter>superscalar</Filter>
+    </ClCompile>
+    <ClCompile Include="dataset.cpp">
+      <Filter>dataset</Filter>
+    </ClCompile>
+    <ClCompile Include="virtualmachine.cpp">
+      <Filter>vm</Filter>
+    </ClCompile>
+    <ClCompile Include="hasher.cpp">
+      <Filter>modernRX</Filter>
+    </ClCompile>
+    <ClCompile Include="datasetcompiler.cpp">
+      <Filter>dataset</Filter>
+    </ClCompile>
+    <ClCompile Include="bytecodecompiler.cpp">
+      <Filter>vm</Filter>
+    </ClCompile>
+    <ClCompile Include="virtualmachineprogram.cpp">
+      <Filter>vm</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
